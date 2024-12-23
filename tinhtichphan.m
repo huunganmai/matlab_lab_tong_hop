@@ -18,14 +18,16 @@ function y = tinhtichphan(f, a, b, xa, ya, N, method)
     end
 
     h = (b - a) / N; % Độ rộng mỗi đoạn con
-    disp(method)
+
     switch method
         case 'hinhthang'
             % Phương pháp hình thang
             result = f(a) + f(b);
             for i = 1:N-1
+                % Tính tổng các giá trị hàm tại các đoạn con
                 result = result + 2 * f(a + i * h);
             end
+            % Tính kết quả cuối cùng
             y = result * h / 2;
 
         case 'simpson_13'
@@ -34,11 +36,14 @@ function y = tinhtichphan(f, a, b, xa, ya, N, method)
             for i = 1:N-1
                 xi = a + i * h;
                 if mod(i, 2) == 0
+                    % Tính tổng các giá trị hàm tại các đoạn con N chẵn
                     result = result + 2 * f(xi);
                 else
+                    % Tính tổng các giá trị hàm tại đoạn con N chẵn
                     result = result + 4 * f(xi);
                 end
             end
+            % Tính kết quả cuối cùng
             y = result * h / 3;
 
         case 'simpson_38'
@@ -50,11 +55,16 @@ function y = tinhtichphan(f, a, b, xa, ya, N, method)
             for i = 1:N-1
                 xi = a + i * h;
                 if mod(i, 3) == 0
+                    % Tính tổng các giá trị hàm tại các đoạn con có N chia 
+                    % hết cho 3
                     result = result + 2 * f(xi);
                 else
+                    % Tính tổng các giá trị hàm tại các đoạn con có N không
+                    % chia hết cho 3
                     result = result + 3 * f(xi);
                 end
             end
+            % Tính kết quả cuối cùng
             y = result * 3 * h / 8;
 
         otherwise

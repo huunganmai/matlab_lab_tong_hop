@@ -1,5 +1,6 @@
 function [nghiem, solanlap] = timnghiem(f, a, b, saiso, method)
     solanlap = 0; % Khởi tạo số lần lặp ban đầu.
+    imax = 10000;
     switch (method)
         case 'chiadoi'
             % Kiểm tra dấu của f(a), f(b), nếu lớn hơn 0 => khoảng phân ly sai
@@ -30,8 +31,7 @@ function [nghiem, solanlap] = timnghiem(f, a, b, saiso, method)
                 solanlap = solanlap + 1; % Tăng số lần lặp lên 1 sau mỗi vòng lặp
             end
         case 'lap'
-            x_old = a;      % Khởi tạo giá trị x ban đầu
-            imax = 10000;                                                
+            x_old = a;      % Khởi tạo giá trị x ban đầu                                                
             while solanlap < imax
                 % Tính giá trị x_new
                 x_new = f(x_old);
@@ -52,7 +52,6 @@ function [nghiem, solanlap] = timnghiem(f, a, b, saiso, method)
                 nghiem = NaN;
             end
         case 'tieptuyen'
-%             syms x;
             fd1 = str2func(['@(x)' char(diff(f))]);      % Đạo hàm cấp 1 của f
             fd2 = str2func(['@(x)' char(diff(fd1))]);    % Đạo hàm cấp 2 của f
             
@@ -73,6 +72,26 @@ function [nghiem, solanlap] = timnghiem(f, a, b, saiso, method)
                 % Gán x0 bằng x hiện tại để sử dụng cho vòng lặp tiếp theo
                 x0 = nghiem;
             end
+        case 'daycung'
+            solanlap = 0; % Số lần lặp
+            ea = 100; % Sai số khởi tạo
+            nghiem = NaN; % Nghiệm ban đầu
+        
+            while solanlap < imax
+                solanlap = solanlap + 1;
+                if f(a) == f(b) % Tránh chia cho 0
+                    error('Không thể áp dụng phương pháp dây cung do fx(a) = fx(b).');
+                end
+                c = b - f(b) * (b - a) / (f(b) - f(a)); % Công thức dây cung
+                ea = abs(c - b); % Sai số
+                if ea < saiso % Kiểm tra sai số
+                    nghiem = c; % Lưu nghiệm
+                    return;
+                end
+                a = b;
+                b = c; % Cập nhật giá trị
+            end
+            nghiem = b; % Nghiệm gần đúng
         otherwise
             error('Chon phuong phap phu hop')
     end

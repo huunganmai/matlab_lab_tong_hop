@@ -1,7 +1,8 @@
 function P = tinhnoisuy(xa, ya, method)
-    % Hàm tính nội suy
-
-
+    % Hàm tính đa thức nội suy
+    % xa, ya: Mảng các giá trị x và y tương ứng
+    % method: Phương pháp nội suy ('lagrange', 'newton_tien, 'newton_lui)
+    % P: Đa thức nội suy
     syms x;
     n = length(xa);
     switch lower(method)
